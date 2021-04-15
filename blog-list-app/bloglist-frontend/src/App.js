@@ -5,10 +5,10 @@ import Notification from "./components/Notification";
 import CreateBlog from "./components/CreateBlog";
 import Togglable from "./components/Togglable";
 import LogOutButton from "./components/LogOutButton";
-import AllUsers from "./components/AllUsers"
-import OneUser from "./components/OneUser"
-import OneBlog from "./components/Oneblog"
-import CreateUser from "./components/CreateUserForm"
+import AllUsers from "./components/AllUsers";
+import OneUser from "./components/OneUser";
+import OneBlog from "./components/Oneblog";
+import CreateUser from "./components/CreateUserForm";
 
 import blogServices from "./services/blogs";
 
@@ -16,8 +16,8 @@ import usersService from "./services/users";
 import loginService from "./services/login";
 
 import { initializeBlogs } from "./reducers/blogReducer";
-import { setLoginUser } from "./reducers/usersReducer"
-import { getAllUsers } from "./reducers/allUsersReducer"
+import { setLoginUser } from "./reducers/usersReducer";
+import { getAllUsers } from "./reducers/allUsersReducer";
 import { useDispatch, useSelector } from "react-redux";
 import {
   BrowserRouter as Router,
@@ -27,22 +27,21 @@ import {
   Redirect,
   useRouteMatch,
   useHistory,
-} from "react-router-dom"
-
+} from "react-router-dom";
+//gghghhhhhhhhhhhhhhhhhh
 const App = (props) => {
   //const [blogs, setBlogs] = useState([]);
   const [message, setMessage] = useState(null);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-
-  const user = useSelector(state => state.logInUser)
-  const blogs = useSelector(state => state.blogs)
-  console.log({ user })
+  const user = useSelector((state) => state.logInUser);
+  const blogs = useSelector((state) => state.blogs);
+  console.log({ user });
   const noteFormRef = useRef();
 
   const dispatch = useDispatch();
- const history = useHistory()
+  const history = useHistory();
   function compareValues(key, order = "asc") {
     return function innerSort(a, b) {
       if (!a.hasOwnProperty(key) || !b.hasOwnProperty(key)) {
@@ -67,27 +66,19 @@ const App = (props) => {
 
   useEffect(() => {
     dispatch(initializeBlogs());
-    dispatch( getAllUsers ());
-   
+    dispatch(getAllUsers());
   }, [blogs]);
-
-
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem("loggedNoteappUser");
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON);
       //setUser(user);
-      dispatch(setLoginUser(user))
+      dispatch(setLoginUser(user));
       blogServices.setToken(user.token);
       usersService.setToken(user.token);
-
     }
   }, []);
-
-
-
-
 
   const handleUsernameChange = (event) => {
     setUsername(event.target.value);
@@ -110,7 +101,7 @@ const App = (props) => {
       window.localStorage.setItem("loggedNoteappUser", JSON.stringify(user));
       blogServices.setToken(user.token);
       //setUser(user);
-      dispatch(setLoginUser(user))
+      dispatch(setLoginUser(user));
       setUsername("");
       setPassword("");
       setMessage({ type: "success", message: `${user.name} logged in` });
@@ -134,15 +125,8 @@ const App = (props) => {
     //   setMessage(null);
     // }, 5000);
     // setUser(null);
-    dispatch(setLoginUser(null))
-    
+    dispatch(setLoginUser(null));
   };
-
-
- 
-
- 
-
 
   // //implementing updating likes
   // const updateLikes = (id) => {
@@ -183,11 +167,8 @@ const App = (props) => {
   //   // });
   // };
 
-
   // const match = useRouteMatch('/blogs/:id')
   // const blog = match ? blogs.find(blog => blog.id === Number(match.params.id)): null
-
-
 
   // if (user === null) {
   //   return (
@@ -207,80 +188,100 @@ const App = (props) => {
   //   );
   // }
   const padding = {
-    padding: 5
-  }
+    padding: 5,
+  };
 
   return (
-    
     <Router>
       <div>
-      <div>
-       <Link to="/" style={padding} >Blogs </Link>
-          <Link to="/users" style={padding} >Users </Link> 
-          
-        {user? <><em>{user.username} logged in  </em> < Link to="/logout" style={padding} > logout </Link> </>
-                   :<> <Link style={padding} to="/login">login</Link> <Link style={padding} to="/register">register</Link></>}
-         
-  
-        
-      </div>
-      <div>
-        <Notification message={message} />
-        
+        <div>
+          <Link to="/" style={padding}>
+            Blogs{" "}
+          </Link>
+          <Link to="/users" style={padding}>
+            Users{" "}
+          </Link>
 
-      <Switch>
-      <Route path="/users/:id">  <OneUser />  </Route>
-        <Route path="/users">
-       
-          {user ?     <AllUsers />  : <Redirect to="/login" />}
-        </Route>
-         
-        <Route path="/logout"> <LogOutButton handleLogout={handleLogout}/> </Route> 
+          {user ? (
+            <>
+              <em>{user.username} logged in </em>{" "}
+              <Link to="/logout" style={padding}>
+                {" "}
+                logout{" "}
+              </Link>{" "}
+            </>
+          ) : (
+            <>
+              {" "}
+              <Link style={padding} to="/login">
+                login
+              </Link>{" "}
+              <Link style={padding} to="/register">
+                register
+              </Link>
+            </>
+          )}
+        </div>
+        <div>
+          <Notification message={message} />
 
-          <Route path="/blogs/:id"> <OneBlog  /> <Blogs /> </Route>
-         
+          <Switch>
+            <Route path="/users/:id">
+              {" "}
+              <OneUser />{" "}
+            </Route>
+            <Route path="/users">
+              {user ? <AllUsers /> : <Redirect to="/login" />}
+            </Route>
 
-          <Route path="/login">
-            {user ? <Redirect to="/" />:
-        <>  <Togglable buttonLabel="login">
-          <h2>Log in to application</h2>
-          <LoginForm
-            handlePasswordChange={handlePasswordChange}
-            handleUsernameChange={handleUsernameChange}
-            handleLogin={handleLogin}
-            password={password}
-            username={username}
-          />
-        </Togglable></>
-        }
-        </Route>
+            <Route path="/logout">
+              {" "}
+              <LogOutButton handleLogout={handleLogout} />{" "}
+            </Route>
 
-        <Route path="/register">
-        <Togglable buttonLabel="create user" ref={noteFormRef}>
-          <p>Create New User</p>
-          < CreateUser/> 
-        </Togglable>
-        </Route>
+            <Route path="/blogs/:id">
+              {" "}
+              <OneBlog /> <Blogs />{" "}
+            </Route>
 
-          
-          <Route path="/" > 
-          <Togglable buttonLabel="create blog" ref={noteFormRef}>
-          <p>Create New</p>
-          <CreateBlog />
-        </Togglable>
-        <h2>blogs</h2>
-          
-           <Blogs /> 
-           
-           </Route>
+            <Route path="/login">
+              {user ? (
+                <Redirect to="/" />
+              ) : (
+                <>
+                  {" "}
+                  <Togglable buttonLabel="login">
+                    <h2>Log in to application</h2>
+                    <LoginForm
+                      handlePasswordChange={handlePasswordChange}
+                      handleUsernameChange={handleUsernameChange}
+                      handleLogin={handleLogin}
+                      password={password}
+                      username={username}
+                    />
+                  </Togglable>
+                </>
+              )}
+            </Route>
 
-          
-      
+            <Route path="/register">
+              <Togglable buttonLabel="create user" ref={noteFormRef}>
+                <p>Create New User</p>
+                <CreateUser />
+              </Togglable>
+            </Route>
 
-     
+            <Route path="/">
+              <Togglable buttonLabel="create blog" ref={noteFormRef}>
+                <p>Create New</p>
+                <CreateBlog />
+              </Togglable>
+              <h2>blogs</h2>
 
-        </Switch>
-      </div>
+              <Blogs />
+            </Route>
+          </Switch>
+        </div>
       </div>
     </Router>
   );
